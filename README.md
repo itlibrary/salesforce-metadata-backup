@@ -2,36 +2,33 @@
 ## @Author: Bhoopender Pal Singh
 ## @License: GPL-3.0
 
+###
 ### This utility backs up all specified metadata from the specified Salesforce Org.
-
-
+###
 
 **What are the required Third Party Software?**
 1. Oracle Java
 2. Apache Ant
 3. ant-salesforce.jar
 
-	Place this jar in Ant's 'lib' directory.
-	
-	This jar is also checked-in with this project in 'ant-libs' directory.	
+	Place this jar in Ant's 'lib' directory. This jar is also checked-in with this project in 'ant-libs' directory.	
 4. ant-contrib-1.0b3.jar
 
-	Place this jar in Ant's 'lib' directory.
-	
-	This jar is also checked-in with this project in 'ant-libs' directory.
+	Place this jar in Ant's 'lib' directory. This jar is also checked-in with this project in 'ant-libs' directory.
 	
 	
 **How to Run?**
 1. Open terminal (command prompt) and switch to your base directory of this project i.e. where you placed:
 
 	build.xml
+	
 	build.properties
 2. Configure build.properties
 
-	Specify your preferences e.g. SFDC API Version, Org Credentials, Desired Metadata to backup, Org Login URL
+	Specify your preferences e.g. SFDC API Version, Org Credentials, Desired Metadata to backup, Org Login URL.
 3. Execute
 
-	Just type *ant* on the terminal and hit ENTER key
+	Just type *ant* on the terminal and hit ENTER key.
 4. This will download all specified metadata and create a package.xml in 'src' folder.
 
 
@@ -52,4 +49,4 @@ This project has been tested on below versions but that doesn't mean just limite
 
 	Windows 8.1 Pro
 	
-	**Note: This should run on other operating systems as well where Oracle Java is supported e.g. Linux, Ubuntu, Mac etc.**
+	***Note: This should run on other operating systems as well where Oracle Java is supported e.g. Linux, Ubuntu, Mac etc.***
