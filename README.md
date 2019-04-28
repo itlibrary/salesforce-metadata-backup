@@ -4,12 +4,12 @@ This utility backs up all specified metadata from the specified Salesforce Org.
 @Author: Bhoopender Pal Singh
 
 What are the required Third Party Software?
-1 Oracle Java
-2 Apache Ant
-3 ant-salesforce.jar
+1. Oracle Java
+2. Apache Ant
+3. ant-salesforce.jar
 	Place this jar in Ant's 'lib' directory.
 	This jar is also checked-in with this project in 'ant-libs' directory.
-4 ant-contrib-1.0b3.jar
+4. ant-contrib-1.0b3.jar
 	Place this jar in Ant's 'lib' directory.
 	This jar is also checked-in with this project in 'ant-libs' directory.
 
