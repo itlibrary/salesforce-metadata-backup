@@ -25,11 +25,11 @@
 	build.properties
 2. Configure build.properties
 
-	Specify your preferences e.g. SFDC API Version, Org Credentials, Desired Metadata to backup, Org Login URL.
+	Specify your preferences *e.g. Target Directory, SFDC API Version, Org Credentials, Desired Metadata to backup, Org Login URL*.
 3. Execute
 
-	Just type *ant* on the terminal and hit ENTER key.
-4. This will download all specified metadata and create a package.xml in 'src' folder.
+	Just type *ant* on the terminal and hit *ENTER* key.
+4. This will download all specified metadata and create a *package.xml* in the specified target directory.
 
 
 **What platforms/software versions this is tested on?**
