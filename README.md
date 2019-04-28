@@ -1,8 +1,9 @@
 # salesforce-metadata-backup
-##@Author: Bhoopender Pal Singh
-##@License: GPL-3.0
+## @Author: Bhoopender Pal Singh
+## @License: GPL-3.0
 
-###This utility backs up all specified metadata from the specified Salesforce Org.
+### This utility backs up all specified metadata from the specified Salesforce Org.
+
 
 **What are the required Third Party Software?**
 1. Oracle Java
@@ -17,6 +18,8 @@
 	Place this jar in Ant's 'lib' directory.
 	
 	This jar is also checked-in with this project in 'ant-libs' directory.
+	
+	
 **How to Run?**
 1. Open terminal (command prompt) and switch to your base directory of this project i.e. where you placed:
 	build.xml
@@ -26,6 +29,7 @@
 3. Execute
 	Just type *ant* on the terminal and hit ENTER key
 4. This will download all specified metadata and create a package.xml in 'src' folder.
+
 
 **What platforms/software versions this is tested on?**
 
