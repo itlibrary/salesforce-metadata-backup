@@ -1,42 +1,118 @@
-<!--@Author: Bhoopender Pal Singh-->
+<!--@Author Name: Bhoopender Pal Singh-->
+<!--@Author Email: tanwar.bpsingh@gmail.com-->
+<!--@License: GPL-3.0-->
 <project name="BackupMetadata" default="backupMetadata" basedir="." xmlns:sf="antlib:com.salesforce" xmlns:ac="antlib:net.sf.antcontrib">
 
-    <property file="build.properties"/>
+	<property file="build.properties"/>
 	<property name="myTargetDir" value="${my.target.dir}"/>    
 	
-    <condition property="sf.username" value=""> <not> <isset property="sf.username"/> </not> </condition>
-    <condition property="sf.password" value=""> <not> <isset property="sf.password"/> </not> </condition>
-    <condition property="sf.sessionId" value=""> <not> <isset property="sf.sessionId"/> </not> </condition>
+	<condition property="sf.username" value=""> <not> <isset property="sf.username"/> </not> </condition>
+	<condition property="sf.password" value=""> <not> <isset property="sf.password"/> </not> </condition>
+	<condition property="sf.sessionId" value=""> <not> <isset property="sf.sessionId"/> </not> </condition>
 
-    <taskdef resource="com/salesforce/antlib.xml" uri="antlib:com.salesforce">
-        <classpath>
-            <pathelement location="ant-salesforce.jar" />        	
-        </classpath>
-    </taskdef>
+	<taskdef resource="com/salesforce/antlib.xml" uri="antlib:com.salesforce">
+		<classpath>
+			<pathelement location="ant-salesforce.jar" />      	
+		</classpath>
+	</taskdef>
 
-    <target name="initBulkRetrieve" >
-      <sf:bulkRetrieve username="${sf.username}" password="${sf.password}" sessionId="${sf.sessionId}" serverurl="${sf.serverurl}" maxPoll="${sf.maxPoll}" metadataType="${bulkRetrieveMetadataType}" retrieveTarget="${myTargetDir}" batchSize="200"/>	  	  
-    </target>
-	
+	<target name="initBulkRetrieve" >
+		<sf:bulkRetrieve username="${sf.username}" password="${sf.password}" sessionId="${sf.sessionId}" serverurl="${sf.serverurl}" maxPoll="${sf.maxPoll}" metadataType="${bulkRetrieveMetadataType}" retrieveTarget="${myTargetDir}" batchSize="200"/>	  	  
+	</target>
+
 	<target name="bulkRetrieve" depends="initBulkRetrieve">
-	  <concat destfile="${myTargetDir}${file.separator}packageAll.xml" append="true">
-	    <fileset file="${myTargetDir}${file.separator}package.xml" />
-		<filterchain>
-	      <linecontains negate="true">
-            <contains value="&lt;?xml"/>
-          </linecontains>
-		  <linecontains negate="true">
-            <contains value="&lt;Package"/>
-          </linecontains>
-		  <linecontains negate="true">
-            <contains value="&lt;version"/>
-          </linecontains>
-		  <linecontains negate="true">
-            <contains value="&lt;/Package"/>
-          </linecontains>
-        </filterchain>
-      </concat>
-	  <delete file="${myTargetDir}${file.separator}package.xml"/>
+	  <ac:if>
+			<matches string="${bulkRetrieveMetadataType}" pattern="^.+Folder$"/>			
+			<ac:then>
+				<xmlproperty file="${myTargetDir}${file.separator}package.xml"/>
+				<delete file="${myTargetDir}${file.separator}package.xml"/>				
+				<concat destfile="${myTargetDir}${file.separator}packageAll.xml" append="true">    &lt;types&gt;
+				</concat>				
+				<ac:if>
+					<matches string="${bulkRetrieveMetadataType}" pattern="^Email"/>
+					<ac:then>
+						<ac:var name="bulkRetrieveMetadataTypeFolder" value="EmailTemplate"/>	
+					</ac:then>
+					<ac:elseif>
+						<matches string="${bulkRetrieveMetadataType}" pattern="^Document"/>
+						<ac:then>
+							<ac:var name="bulkRetrieveMetadataTypeFolder" value="Document"/>
+						</ac:then>
+					</ac:elseif>
+					<ac:elseif>
+						<matches string="${bulkRetrieveMetadataType}" pattern="^Dashboard"/>
+						<ac:then>
+							<ac:var name="bulkRetrieveMetadataTypeFolder" value="Dashboard"/>
+						</ac:then>
+					</ac:elseif>
+					<ac:elseif>
+						<matches string="${bulkRetrieveMetadataType}" pattern="^Report"/>
+						<ac:then>
+							<ac:var name="bulkRetrieveMetadataTypeFolder" value="Report"/>
+						</ac:then>
+					</ac:elseif>
+				</ac:if>
+				
+				<ac:foreach list="${Package.types.members}" param="folderName" target="bulkRetrieveFolderType" />
+				
+				<concat destfile="${myTargetDir}${file.separator}packageAll.xml" append="true">&lt;name&gt;${bulkRetrieveMetadataTypeFolder}&lt;/name&gt;
+		&lt;/types&gt;
+				</concat>
+			</ac:then>		
+			<ac:else>
+				<concat destfile="${myTargetDir}${file.separator}packageAll.xml" append="true">
+					<fileset file="${myTargetDir}${file.separator}package.xml" />
+					<filterchain>
+						<linecontains negate="true">
+							<contains value="&lt;?xml"/>
+						</linecontains>
+						<linecontains negate="true">
+							<contains value="&lt;Package"/>
+						</linecontains>
+						<linecontains negate="true">
+							<contains value="&lt;version"/>
+						</linecontains>
+						<linecontains negate="true">
+							<contains value="&lt;/Package"/>
+						</linecontains>
+					</filterchain>
+				</concat>
+				<delete file="${myTargetDir}${file.separator}package.xml"/>
+			</ac:else>
+		</ac:if>		
+	</target>
+
+	<target name="initBulkRetrieveFolderType" >
+		<sf:bulkRetrieve username="${sf.username}" password="${sf.password}" sessionId="${sf.sessionId}" serverurl="${sf.serverurl}" maxPoll="${sf.maxPoll}" metadataType="${bulkRetrieveMetadataTypeFolder}" containingFolder="${folderName}" retrieveTarget="${myTargetDir}" batchSize="200"/>
+	</target>
+
+	<target name="bulkRetrieveFolderType" depends="initBulkRetrieveFolderType">		
+		<concat destfile="${myTargetDir}${file.separator}packageAll.xml" append="true">
+			<fileset file="${myTargetDir}${file.separator}package.xml" />
+			<filterchain>
+				<linecontains negate="true">
+					<contains value="&lt;?xml"/>
+				</linecontains>
+				<linecontains negate="true">
+					<contains value="&lt;Package"/>
+				</linecontains>
+				<linecontains negate="true">
+					<contains value="&lt;types"/>
+				</linecontains>
+				<linecontains negate="true">
+					<contains value="&lt;name"/>
+				</linecontains>		  
+				<linecontains negate="true">
+					<contains value="&lt;/types"/>
+				</linecontains>		  
+				<linecontains negate="true">
+					<contains value="&lt;version"/>
+				</linecontains>
+				<linecontains negate="true">
+					<contains value="&lt;/Package"/>
+				</linecontains>
+			</filterchain>
+		</concat>      
 	</target>
 	
 	<target name="initCheckTargetDirExists">
@@ -63,14 +139,14 @@
 	</target>
 	
 	<target name="bulkRetrieveAll" depends="checkTargetDirExists,checkTargetDirEmpty" unless="fileset.notempty">
-	  <ac:foreach list="${sf.metadataType}" param="bulkRetrieveMetadataType" target="bulkRetrieve" />	  	  
+	  <ac:foreach list="${sf.metadataType}" param="bulkRetrieveMetadataType" target="bulkRetrieve" />	  
 	</target>
 	
 	<target name="formatFinalContents" unless="fileset.notempty">
 <echo file="${myTargetDir}${file.separator}package1.xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;Package xmlns="http://soap.sforce.com/2006/04/metadata"&gt;
 </echo>
-<echo file="${myTargetDir}${file.separator}package2.xml">&lt;version>${sf.version}&lt;/version&gt;
+<echo file="${myTargetDir}${file.separator}package2.xml">  &lt;version>${sf.version}&lt;/version&gt;
 &lt;/Package&gt;
 </echo>
 	  <echo file="${myTargetDir}${file.separator}package.xml" />
