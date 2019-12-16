@@ -3,7 +3,7 @@
 ## @License: GPL-3.0
 
 ###
-### This utility backs up all specified metadata from the specified Salesforce Org.
+### This utility backs up all the specified metadata from a Salesforce Org and generates a package.xml.
 ###
 
 **What are the required Third Party Software?**
