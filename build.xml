@@ -17,45 +17,46 @@
 	</taskdef>
 
 	<target name="initBulkRetrieve" >
-		<sf:bulkRetrieve username="${sf.username}" password="${sf.password}" sessionId="${sf.sessionId}" serverurl="${sf.serverurl}" maxPoll="${sf.maxPoll}" metadataType="${bulkRetrieveMetadataType}" retrieveTarget="${myTargetDir}" batchSize="200"/>	  	  
+		<ac:if>
+			<matches string="${bulkRetrieveMetadataType}" pattern="^EmailTemplate$"/>
+			<ac:then>
+				<ac:var name="bulkRetrieveMetadataTypeInternal" value="EmailFolder"/>	
+			</ac:then>
+			<ac:elseif>
+				<matches string="${bulkRetrieveMetadataType}" pattern="^Document$"/>
+				<ac:then>
+					<ac:var name="bulkRetrieveMetadataTypeInternal" value="DocumentFolder"/>
+				</ac:then>
+			</ac:elseif>
+			<ac:elseif>
+				<matches string="${bulkRetrieveMetadataType}" pattern="^Dashboard$"/>
+				<ac:then>
+					<ac:var name="bulkRetrieveMetadataTypeInternal" value="DashboardFolder"/>
+				</ac:then>
+			</ac:elseif>
+			<ac:elseif>
+				<matches string="${bulkRetrieveMetadataType}" pattern="^Report$"/>
+				<ac:then>
+					<ac:var name="bulkRetrieveMetadataTypeInternal" value="ReportFolder"/>
+				</ac:then>
+			</ac:elseif>
+			<ac:else>
+				<ac:var name="bulkRetrieveMetadataTypeInternal" value="${bulkRetrieveMetadataType}"/>
+			</ac:else>
+		</ac:if>
+		<sf:bulkRetrieve username="${sf.username}" password="${sf.password}" sessionId="${sf.sessionId}" serverurl="${sf.serverurl}" maxPoll="${sf.maxPoll}" metadataType="${bulkRetrieveMetadataTypeInternal}" retrieveTarget="${myTargetDir}" batchSize="200"/>	  	  
 	</target>
 
 	<target name="bulkRetrieve" depends="initBulkRetrieve">
 	  <ac:if>
-			<matches string="${bulkRetrieveMetadataType}" pattern="^.+Folder$"/>			
+			<matches string="${bulkRetrieveMetadataTypeInternal}" pattern="^.+Folder$"/>			
 			<ac:then>
 				<xmlproperty file="${myTargetDir}${file.separator}package.xml"/>
 				<delete file="${myTargetDir}${file.separator}package.xml"/>				
 				<concat destfile="${myTargetDir}${file.separator}packageAll.xml" append="true">    &lt;types&gt;
 				</concat>				
-				<ac:if>
-					<matches string="${bulkRetrieveMetadataType}" pattern="^Email"/>
-					<ac:then>
-						<ac:var name="bulkRetrieveMetadataTypeFolder" value="EmailTemplate"/>	
-					</ac:then>
-					<ac:elseif>
-						<matches string="${bulkRetrieveMetadataType}" pattern="^Document"/>
-						<ac:then>
-							<ac:var name="bulkRetrieveMetadataTypeFolder" value="Document"/>
-						</ac:then>
-					</ac:elseif>
-					<ac:elseif>
-						<matches string="${bulkRetrieveMetadataType}" pattern="^Dashboard"/>
-						<ac:then>
-							<ac:var name="bulkRetrieveMetadataTypeFolder" value="Dashboard"/>
-						</ac:then>
-					</ac:elseif>
-					<ac:elseif>
-						<matches string="${bulkRetrieveMetadataType}" pattern="^Report"/>
-						<ac:then>
-							<ac:var name="bulkRetrieveMetadataTypeFolder" value="Report"/>
-						</ac:then>
-					</ac:elseif>
-				</ac:if>
-				
-				<ac:foreach list="${Package.types.members}" param="folderName" target="bulkRetrieveFolderType" />
-				
-				<concat destfile="${myTargetDir}${file.separator}packageAll.xml" append="true">&lt;name&gt;${bulkRetrieveMetadataTypeFolder}&lt;/name&gt;
+				<ac:foreach list="${Package.types.members}" param="folderName" target="bulkRetrieveFolderType" />				
+				<concat destfile="${myTargetDir}${file.separator}packageAll.xml" append="true">&lt;name&gt;${bulkRetrieveMetadataType}&lt;/name&gt;
 		&lt;/types&gt;
 				</concat>
 			</ac:then>		
@@ -83,7 +84,7 @@
 	</target>
 
 	<target name="initBulkRetrieveFolderType" >
-		<sf:bulkRetrieve username="${sf.username}" password="${sf.password}" sessionId="${sf.sessionId}" serverurl="${sf.serverurl}" maxPoll="${sf.maxPoll}" metadataType="${bulkRetrieveMetadataTypeFolder}" containingFolder="${folderName}" retrieveTarget="${myTargetDir}" batchSize="200"/>
+		<sf:bulkRetrieve username="${sf.username}" password="${sf.password}" sessionId="${sf.sessionId}" serverurl="${sf.serverurl}" maxPoll="${sf.maxPoll}" metadataType="${bulkRetrieveMetadataType}" containingFolder="${folderName}" retrieveTarget="${myTargetDir}" batchSize="200"/>
 	</target>
 
 	<target name="bulkRetrieveFolderType" depends="initBulkRetrieveFolderType">		
