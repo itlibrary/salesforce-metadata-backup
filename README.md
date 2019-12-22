@@ -5,16 +5,6 @@
 ###
 ### This utility backs up all the specified metadata from a Salesforce Org and generates a package.xml.
 ###
-
-**What are the required Third Party Software?**
-1. Oracle Java
-2. Apache Ant
-3. ant-salesforce.jar
-
-	Place this jar in Ant's 'lib' directory. This jar is also checked-in with this project in 'ant-libs' directory.	
-4. ant-contrib-1.0b3.jar
-
-	Place this jar in Ant's 'lib' directory. This jar is also checked-in with this project in 'ant-libs' directory.
 	
 	
 **How to Run?**
@@ -30,6 +20,21 @@
 
 	Just type *ant* on the terminal and hit *ENTER* key.
 4. This will download all specified metadata and create a *package.xml* in the specified target directory.
+
+5. To watch the Demo, please click on below thumbnail
+
+   <a href="http://www.youtube.com/watch?feature=player_embedded&v=akaVaOe3wLk" target="_blank"><img src="http://img.youtube.com/vi/akaVaOe3wLk/0.jpg" alt="Salesforce Metadata Backup" width="240" height="180" border="10" /></a>
+
+
+**What are the required Third Party Software?**
+1. Oracle Java
+2. Apache Ant
+3. ant-salesforce.jar
+
+	Place this jar in Ant's 'lib' directory. This jar is also checked-in with this project in 'ant-libs' directory.	
+4. ant-contrib-1.0b3.jar
+
+	Place this jar in Ant's 'lib' directory. This jar is also checked-in with this project in 'ant-libs' directory.
 
 
 **What platforms/software versions this is tested on?**
